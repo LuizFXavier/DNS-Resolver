@@ -10,11 +10,11 @@ import java.util.ArrayList;
 
 public class MessageEncoder {
 
-    byte[] encodeHeader(final DnsHeader header) {
+    private static byte[] encodeHeader(final DnsHeader header) {
         ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES * 6);
 
         buffer.putShort(header.id());
-        buffer.putShort(header.flags());
+        buffer.putShort(header.shortFlag());
         buffer.putShort(header.questions());
         buffer.putShort(header.answers());
         buffer.putShort(header.authorities());
@@ -22,7 +22,7 @@ public class MessageEncoder {
 
         return buffer.array();
     }
-    byte[] encodeName(String NAME){
+    private static byte[] encodeName(String NAME){
 
         String[] labels = NAME.split("\\.");
 
@@ -44,7 +44,7 @@ public class MessageEncoder {
         return bytes;
     }
 
-    byte[] encodeQuestion(final Question question){
+    private static byte[] encodeQuestion(final Question question){
 
         byte[] name = encodeName(question.QNAME());
 
@@ -57,7 +57,7 @@ public class MessageEncoder {
         return buffer.array();
     }
 
-    byte[] encodeRR(final RR rr){
+    private static byte[] encodeRR(final RR rr){
         byte[] name = encodeName(rr.NAME());
         ByteBuffer buffer = ByteBuffer.allocate(name.length +
                 Short.BYTES * 2 + Integer.BYTES + Short.BYTES + rr.RDLENGHT());
@@ -72,7 +72,7 @@ public class MessageEncoder {
         return buffer.array();
     }
 
-    public byte[] encode(final DnsMessage message){
+    public static byte[] encode(final DnsMessage message){
         byte[] header = encodeHeader(message.header());
 
         ArrayList<byte[]> questions = new ArrayList<byte[]>();
