@@ -1,22 +1,23 @@
 package model.dnsStructure;
 
 public class DnsHeader {
-    short id;
-    short flags;
+    short id = 0;
+    Flag flags = new Flag();
     short questions = 0;
     short answers = 0;
     short authorities = 0;
     short additional = 0;
 
-    public DnsHeader(short questions) {
-        id = 0;
-        this.questions = questions;
-        Flag flag = new Flag();
-        flag.set_RA(true);
-        flags = flag.parse_short();
-    }
-
     public DnsHeader(){}
+
+    @Override
+    public String toString() {
+        return String.format("""
+                id: %d  flags: %d
+                Qust: %d  Answ: %d
+                Auth: %d  Addi: %d
+                -------------------""", id, flags.parse_short(), questions, answers, authorities, additional);
+    }
 
     public static int BYTES(){
         return Short.BYTES * 6;
@@ -26,9 +27,11 @@ public class DnsHeader {
         return id;
     }
 
-    public short flags() {
+    public Flag flags() {
         return flags;
     }
+
+    public short shortFlag() {return flags.parse_short();}
 
     public short questions() {
         return questions;
@@ -51,7 +54,7 @@ public class DnsHeader {
     }
 
     public void setFlags(short flags) {
-        this.flags = flags;
+        this.flags.setValues(flags);
     }
 
     public void setQuestions(short questions) {
@@ -94,27 +97,28 @@ class Flag{
 
         return (short)r;
     }
-    short QR(){
-        return QR;
+
+    void setValues(short values){
+        this.QR = (short)(values & (short)(1 << 15));
+        this.OPCODE = (short)(values & (short)(0b1111 << 14));
+        this.AA = (short)(values & (short)(1 << 10));
+        this.TC = (short)(values & (short)(1 << 9));
+        this.RD = (short)(values & (short)(1 << 8));
+        this.RA = (short)(values & (short)(1 << 7));
+        this.RCODE = (short)(values & (short)(0b1111));
     }
-    short OPCODE(){
-        return OPCODE;
+
+    boolean QR() { return QR != 0; }
+    boolean AA(){
+        return AA != 0;
     }
-    short AA(){
-        return AA;
+    boolean TC(){
+        return TC != 0;
     }
-    short TC(){
-        return TC;
-    }
-    short RD(){
-        return RD;
-    }
-    short RA(){
-        return RA;
-    }
-    short RCODE(){
-        return RCODE;
-    }
+    boolean RD() { return RD != 0; }
+    boolean RA() { return RA != 0; }
+    short OPCODE(){return (short)(OPCODE >> 11); }
+    short RCODE(){ return RCODE; }
 
     void set_QR(boolean b){
         short r = (short)(b ? 1 : 0);
@@ -123,6 +127,7 @@ class Flag{
     void set_OPCODE(short s){
         OPCODE = (short)(s << 11);
     }
+
     void set_AA(boolean b){
         short r = (short)(b ? 1 : 0);
         AA = (short)(r << 10);
