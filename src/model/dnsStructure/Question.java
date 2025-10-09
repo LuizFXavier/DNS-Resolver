@@ -13,6 +13,14 @@ public class Question{
         this.QTYPE = QTYPE;
         this.QCLASS = (short)QCLASS;
     }
+    @Override
+    public String toString(){
+        return String.format("(%s, %d, %d)", QNAME, QTYPE, QCLASS);
+    }
+
+    public int bytes(){
+        return QNAME.length() + 2 + Short.BYTES * 2;
+    }
 
     public String QNAME() {
         return QNAME;
