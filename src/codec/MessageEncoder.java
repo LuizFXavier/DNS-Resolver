@@ -1,9 +1,9 @@
 package codec;
 
 import model.DnsMessage;
-import model.dnsStructure.DnsHeader;
-import model.dnsStructure.Question;
-import model.dnsStructure.RR;
+import model.messageStructure.DnsHeader;
+import model.messageStructure.Question;
+import model.messageStructure.recordRegister.RR;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
