@@ -1,19 +1,27 @@
 package codec;
 
 import model.DnsMessage;
-import model.dnsStructure.DnsHeader;
-import model.dnsStructure.Question;
-import model.dnsStructure.RR;
+import model.messageStructure.DnsHeader;
+import model.messageStructure.Question;
+import model.messageStructure.recordRegister.AAAARecord;
+import model.messageStructure.recordRegister.ARecord;
+import model.messageStructure.recordRegister.NsRecord;
+import model.messageStructure.recordRegister.RR;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static codec.RDataDecoder.*;
 
 public class MessageDecoder {
 
-    private static DnsHeader decodeHeader(byte[] bytes) {
+    private static DnsHeader decodeHeader(ByteBuffer buffer) {
         DnsHeader header = new DnsHeader();
-        ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
         header.setId(buffer.getShort());
         header.setFlags(buffer.getShort());
@@ -21,10 +29,11 @@ public class MessageDecoder {
         header.setAnswers(buffer.getShort());
         header.setAuthorities(buffer.getShort());
         header.setAdditional(buffer.getShort());
+
         return header;
     }
 
-    private static String decodeName(ByteBuffer buffer) {
+    private static String _decodeName(ByteBuffer buffer) {
 
         byte b = buffer.get();
         ArrayList<Character> chars = new ArrayList<>();
@@ -66,6 +75,7 @@ public class MessageDecoder {
         }
         return questions;
     }
+
     private static RR decodeRR(ByteBuffer buffer) {
 
         String NAME = decodeName(buffer);
@@ -74,10 +84,18 @@ public class MessageDecoder {
         int TTL = buffer.getInt();
         short RDLENGHT = buffer.getShort();
 
+        buffer.mark();
         byte[] RDATA = new byte[RDLENGHT];
         buffer.get(RDATA);
+        buffer.reset();
 
-        return new RR(NAME, TYPE, CLASS, TTL, RDLENGHT, RDATA);
+        return switch (TYPE) {
+            case 1 -> new ARecord(NAME, TYPE, CLASS, TTL, RDLENGHT, RDATA, decodeIPv4(buffer));
+            case 2 -> new NsRecord(NAME, TYPE, CLASS, TTL, RDLENGHT, RDATA, decodeName(buffer));
+            case 28 -> new AAAARecord(NAME, TYPE, CLASS, TTL, RDLENGHT, RDATA, decodeIPv6(buffer));
+            default -> new RR(NAME, TYPE, CLASS, TTL, RDLENGHT, RDATA);
+        };
+
     }
 
     private static List<RR> decodeRRs(int n, ByteBuffer buffer) {
@@ -88,14 +106,14 @@ public class MessageDecoder {
         }
         return RRs;
     }
+
     public static DnsMessage decode(byte[] bytes) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
 
-        byte[] headerBytes = new byte[DnsHeader.BYTES()];
-        buffer.get(headerBytes);
-
-        DnsHeader header = decodeHeader(headerBytes);
+        DnsHeader header = decodeHeader(buffer);
         DnsMessage message = new DnsMessage(header);
+
+        System.out.println(header);
 
         message.setQuestions(decodeQuestions(header.questions(), buffer));
         message.setAnswers(decodeRRs(header.answers(), buffer));

@@ -1,4 +1,4 @@
-package model.dnsStructure;
+package model.messageStructure.recordRegister;
 
 public class RR{
     String NAME;
@@ -19,7 +19,11 @@ public class RR{
 
     @Override
     public String toString() {
-        return String.format("(%s, %d, %d, %d, %d, [data...])", NAME, TYPE, CLASS, TTL, RDLENGHT);
+        return String.format("(%s, %d, %d, %d, %d, %s)", NAME, TYPE, CLASS, TTL, RDLENGHT, decodedRdata());
+    }
+
+    public String decodedRdata(){
+        return "[data...]";
     }
 
     public String NAME() {
