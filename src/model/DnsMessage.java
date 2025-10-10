@@ -1,8 +1,8 @@
 package model;
 
-import model.dnsStructure.DnsHeader;
-import model.dnsStructure.Question;
-import model.dnsStructure.RR;
+import model.messageStructure.DnsHeader;
+import model.messageStructure.Question;
+import model.messageStructure.recordRegister.RR;
 
 import java.util.ArrayList;
 import java.util.List;

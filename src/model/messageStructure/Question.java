@@ -1,7 +1,4 @@
-package model.dnsStructure;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
+package model.messageStructure;
 
 public class Question{
     String QNAME;
