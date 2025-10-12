@@ -18,6 +18,13 @@ public class DnsMessage {
         this.header = header;
     }
 
+    public DnsMessage(String qName){
+        header = new DnsHeader();
+        header.setQuestions((short)1);
+        header.flags().set_RD(true);
+        questions.add(new Question(qName, (short)1, 1));
+    }
+
     @Override
     public String toString(){
         String h = header.toString();
@@ -87,6 +94,14 @@ public class DnsMessage {
 
     public void setAdditional(List<RR> additional) {
         this.additional = additional;
+    }
+
+    public boolean hasFinalAnswer(){
+        return header.answers() > 0 || header().flags().RCODE() == 3;
+    }
+
+    public boolean trucated(){
+        return header.flags().TC();
     }
 }
 
