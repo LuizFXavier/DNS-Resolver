@@ -43,13 +43,13 @@ public class Flag{
     boolean AA(){
         return AA != 0;
     }
-    boolean TC(){
+    public boolean TC(){
         return TC != 0;
     }
     boolean RD() { return RD != 0; }
     boolean RA() { return RA != 0; }
     short OPCODE(){return (short)(OPCODE >> 11); }
-    short RCODE(){ return RCODE; }
+    public short RCODE(){ return (short)RCODE; }
 
     public void set_QR(boolean b){
         short r = (short)(b ? 1 : 0);
