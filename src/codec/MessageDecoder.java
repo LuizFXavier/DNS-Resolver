@@ -113,8 +113,6 @@ public class MessageDecoder {
         DnsHeader header = decodeHeader(buffer);
         DnsMessage message = new DnsMessage(header);
 
-        System.out.println(header);
-
         message.setQuestions(decodeQuestions(header.questions(), buffer));
         message.setAnswers(decodeRRs(header.answers(), buffer));
         message.setAuthorities(decodeRRs(header.authorities(), buffer));
