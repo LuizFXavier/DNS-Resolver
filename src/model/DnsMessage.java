@@ -9,20 +9,29 @@ import java.util.List;
 
 public class DnsMessage {
     DnsHeader header;
-    List<Question> questions = new ArrayList<Question>();
-    List<RR> answers = new ArrayList<RR>();
-    List<RR> authorities = new ArrayList<RR>();
-    List<RR> additional = new ArrayList<RR>();
+    List<Question> questions = new ArrayList<Question>(); // Sessão de perguntas
+    List<RR> answers = new ArrayList<RR>(); // Sessão de respostas
+    List<RR> authorities = new ArrayList<RR>(); // Sessão de autoridades
+    List<RR> additional = new ArrayList<RR>(); // Sessão de registros adicionais
 
     public DnsMessage(DnsHeader header){
         this.header = header;
     }
 
-    public DnsMessage(String qName){
+    // Constrói uma pergunta de um nome dns.
+    public DnsMessage(String qName, String qType, boolean recursive){
         header = new DnsHeader();
         header.setQuestions((short)1);
-        header.flags().set_RD(true);
-        questions.add(new Question(qName, (short)1, 1));
+        header.flags().set_RD(recursive);
+
+        short t = switch (qType) {
+            case "A" -> 1;
+            case "AAAA" -> 28;
+            case "NS" -> 2;
+            default -> 0;
+        };
+
+        questions.add(new Question(qName, t, 1));
     }
 
     @Override

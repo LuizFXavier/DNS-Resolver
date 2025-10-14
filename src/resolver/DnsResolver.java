@@ -9,5 +9,5 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface DnsResolver {
-    public void resolve(String name);
+    public void resolve(String name, String qtype);
 }
