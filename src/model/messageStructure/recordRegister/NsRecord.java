@@ -1,5 +1,8 @@
 package model.messageStructure.recordRegister;
 
+/**
+ * Representação dos registros que contém nomes de servidores DNS.
+ */
 public class NsRecord extends RR{
     String recordName;
 

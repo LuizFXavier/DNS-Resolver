@@ -72,6 +72,12 @@ public class MessageEncoder {
         return buffer.array();
     }
 
+    /**
+     * Transforma um objeto da classe DnsMessage em um array de bytes,
+     * para que assim possa ser enviado pelo socket para o servidor DNS.
+     * @param message Mensagem DNS a ser codificada.
+     * @return Array de bytes resultante da codificação da mensagem.
+     */
     public static byte[] encode(final DnsMessage message){
         byte[] header = encodeHeader(message.header());
 

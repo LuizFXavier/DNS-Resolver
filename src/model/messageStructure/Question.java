@@ -1,5 +1,8 @@
 package model.messageStructure;
 
+/**
+ * Representação de uma questão de uma mensagem DNS
+ */
 public class Question{
     String QNAME;
     short QTYPE;

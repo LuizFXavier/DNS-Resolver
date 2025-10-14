@@ -1,9 +1,12 @@
 package model.messageStructure;
 
+/**
+ * Representação do cabeçalho das mensagens DNS
+ */
 public class DnsHeader {
-    short id = 0;
+    short id = 0; // Identificador da mensagem
     Flag flags = new Flag();
-    short questions = 0;
+    short questions = 0; // Número de questões presentes na mensagem
     short answers = 0;
     short authorities = 0;
     short additional = 0;

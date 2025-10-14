@@ -1,14 +1,17 @@
 package model.messageStructure;
 
+/**
+ * Abstração do campo flags do cabeçalho das mensagens DNS.
+ */
 public class Flag{
-    private short QR = 0;
-    private short OPCODE = 0; // 4 bits
-    private short AA =  0;
-    private short TC = 0;
-    private short RD = 0;
-    private short RA = 0;
-    private short z = 0; // 3 bits
-    private short RCODE = 0; // 4 bits
+    private short QR = 0; // 0 para Question, 1 para Response
+    private short OPCODE = 0; // 4 bits que definem o tipo de operação requerida
+    private short AA =  0; // Se possui a autoridade do campo de resposta
+    private short TC = 0; // Se a mensagem foi truncada
+    private short RD = 0; // Recursão Desejada
+    private short RA = 0; // Recursão Autorizada
+    private short z = 0; // 3 bits reservados
+    private short RCODE = 0; // 4 bits de código de status da mensagem (ok, erro, etc)
 
     short parse_short(){
         int r = QR;

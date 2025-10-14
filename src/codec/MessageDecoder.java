@@ -20,6 +20,13 @@ import static codec.RDataDecoder.*;
 
 public class MessageDecoder {
 
+
+    /**
+     * Decodifica os primeiros bytes de uma mensagem DNS para
+     * gerar um objeto DnsHeader
+     * @param buffer Buffer de bytes que contém os bytes de cabeçalho
+     * @return Cabeçalho decodificado.
+     */
     private static DnsHeader decodeHeader(ByteBuffer buffer) {
         DnsHeader header = new DnsHeader();
 
@@ -107,6 +114,12 @@ public class MessageDecoder {
         return RRs;
     }
 
+    /**
+     * Decodifica os bytes recebidos pelo servidor DNS, convertendo-os
+     * para um objeto DnsMessage.
+     * @param bytes Array de bytes que contém a mensagem DNS recebida.
+     * @return Mensagem DNS decodificada.
+     */
     public static DnsMessage decode(byte[] bytes) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
 

@@ -1,5 +1,8 @@
 package model.messageStructure.recordRegister;
 
+/**
+ * Representação de um Record Register do DNS
+ */
 public class RR{
     String NAME;
     short TYPE;

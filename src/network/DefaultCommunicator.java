@@ -15,6 +15,7 @@ public class DefaultCommunicator implements DnsCommunicator {
 
     private static final int PORT = 53;
 
+    // Envio de mensagem DNS, primeiro por UDP e com fallback para TCP
     @Override
     public DnsMessage sendMessage(DnsMessage query, String address) throws IOException {
 
@@ -28,6 +29,7 @@ public class DefaultCommunicator implements DnsCommunicator {
         return sendMessageTCP(codedQuery, address);
     }
 
+    // Envio da mensagem DNS pelo protocolo TCP
     private DnsMessage sendMessageTCP(byte[] codedQuery, String address) throws IOException{
 
         try(Socket socket = new Socket(address, PORT)) {
@@ -58,16 +60,19 @@ public class DefaultCommunicator implements DnsCommunicator {
         }
     }
 
+    // Envio da mensagem DNS pelo protocolo UDP
     private DnsMessage sendMessageUDP(byte[] codedQuery, String address) throws IOException {
 
-
+        // Criação do socket UDP
         try(DatagramSocket socket = new DatagramSocket()){
 
+            // Preparação e envio do pacote
             InetAddress inetAddress = InetAddress.getByName(address);
             DatagramPacket packet = new DatagramPacket(codedQuery, codedQuery.length, inetAddress, PORT);
 
             socket.send(packet);
 
+            // Recebimento da resposta
             byte[] buffer = new byte[4096];
             DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
 
@@ -78,6 +83,7 @@ public class DefaultCommunicator implements DnsCommunicator {
             int responseLength = receivedPacket.getLength();
             byte[] responseData = Arrays.copyOf(receivedPacket.getData(), responseLength);
 
+            // Retorno da mensagem decodificada para alto nível
             return MessageDecoder.decode(responseData);
 
         } catch (UnknownHostException e) {

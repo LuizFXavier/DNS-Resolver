@@ -1,5 +1,8 @@
 package model.messageStructure.recordRegister;
 
+/**
+ * Representação dos registros que contém IPv6
+ */
 public class AAAARecord extends RR{
     String address;
 
