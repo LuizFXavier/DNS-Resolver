@@ -8,13 +8,9 @@ import model.messageStructure.recordRegister.ARecord;
 import model.messageStructure.recordRegister.NsRecord;
 import model.messageStructure.recordRegister.RR;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static codec.RDataDecoder.*;
 
@@ -38,29 +34,6 @@ public class MessageDecoder {
         header.setAdditional(buffer.getShort());
 
         return header;
-    }
-
-    private static String _decodeName(ByteBuffer buffer) {
-
-        byte b = buffer.get();
-        ArrayList<Character> chars = new ArrayList<>();
-
-        while (b != (byte) 0x00) {
-            for (byte i = 0; i < b; ++i) {
-                chars.add((char) buffer.get());
-            }
-            chars.add('.');
-            b = buffer.get();
-        }
-        chars.removeLast();
-
-        StringBuilder sb = new StringBuilder(chars.size());
-
-        for (Character c : chars) {
-            sb.append(c);
-        }
-
-        return sb.toString();
     }
 
     private static Question decodeQuestion(ByteBuffer buffer) {

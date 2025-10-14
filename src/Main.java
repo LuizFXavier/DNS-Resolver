@@ -1,5 +1,3 @@
-import network.DefaultCommunicator;
-import network.DotCommunicator;
 import resolver.DefaultResolver;
 import resolver.DnsResolver;
 import resolver.DotResolver;
@@ -57,28 +55,32 @@ class CmdReturn{
             }
 
             // Criação de Resolver com base no --mode recebido
-            if(mode.equals("iterative")){
-                if(!ns.isBlank())
-                    resolver = new DefaultResolver(false, ns);
-                else
-                    resolver = new DefaultResolver(false);
-            } else if (mode.equals("dot")) {
-                if(SNI.isBlank()){
-                    throw new IllegalArgumentException("Campo SNI requerido neste modo!");
+            switch (mode) {
+                case "iterative" -> {
+                    if (!ns.isBlank())
+                        resolver = new DefaultResolver(false, ns);
+                    else
+                        resolver = new DefaultResolver(false);
                 }
-                resolver = new DotResolver(SNI);
-            } else if (mode.equals("recursive")) {
-                if(!ns.isBlank())
-                    resolver = new DefaultResolver(true, ns);
-                else
-                    resolver = new DefaultResolver(true);
-            } else if (mode.equals("forwarder")) {
-                if(!ns.isBlank())
-                    resolver = new DefaultResolver(true, ns);
-                else
-                    throw new IllegalArgumentException("Campo NS requerido neste modo!");
-            } else{
-                throw new IllegalArgumentException("Modo de execução inválido ou não implementado!");
+                case "dot" -> {
+                    if (SNI.isBlank()) {
+                        throw new IllegalArgumentException("Campo SNI requerido neste modo!");
+                    }
+                    resolver = new DotResolver(SNI);
+                }
+                case "recursive" -> {
+                    if (!ns.isBlank())
+                        resolver = new DefaultResolver(true, ns);
+                    else
+                        resolver = new DefaultResolver(true);
+                }
+                case "forwarder" -> {
+                    if (!ns.isBlank())
+                        resolver = new DefaultResolver(true, ns);
+                    else
+                        throw new IllegalArgumentException("Campo NS requerido neste modo!");
+                }
+                default -> throw new IllegalArgumentException("Modo de execução inválido ou não implementado!");
             }
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);

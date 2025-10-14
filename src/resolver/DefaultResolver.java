@@ -3,7 +3,6 @@ package resolver;
 import model.DnsMessage;
 import model.messageStructure.recordRegister.RR;
 import network.DefaultCommunicator;
-import network.DnsCommunicator;
 
 import java.io.IOException;
 import java.util.ArrayList;
